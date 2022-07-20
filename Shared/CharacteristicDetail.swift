@@ -66,5 +66,6 @@ struct CharacteristicDetail: View {
                 }
             }
         }
+        .navigationTitle(characteristic.uuid.description)
     }
 }
