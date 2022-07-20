@@ -39,6 +39,7 @@ struct ContentView: View {
                 refresh()
             }
         }
+        .navigationViewStyle(.stack) 
     }
     
     private func refresh() {
