@@ -9,7 +9,6 @@ import CoreBluetooth
 import Combine
 
 final class Peripheral: Identifiable, ObservableObject {
-    @Published private(set) var services = [CBService]()
     @Published private(set) var stateDescription = "Unknown"
     @Published var rssi: Int
     
@@ -32,7 +31,7 @@ final class Peripheral: Identifiable, ObservableObject {
         cancellable.append(cbPeripheral.publisher(for: \.services)
             .receive(on: RunLoop.main)
             .sink(receiveValue: { _ in
-                self.services = cbPeripheral.services ?? []
+                self.objectWillChange.send()
             }))
     }
 }

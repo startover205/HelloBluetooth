@@ -48,7 +48,7 @@ struct PeripheralDetail: View {
                         
                         Spacer()
                         
-                        Text(peripheral.services.count.description)
+                        Text(peripheral.cbPeripheral.services?.count.description ?? "0")
                     }
                 }
             }
