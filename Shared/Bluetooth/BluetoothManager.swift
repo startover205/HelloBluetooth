@@ -120,7 +120,7 @@ extension BluetoothManager: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        log?("\(Date())---\(#function)-peripheral: \(peripheral.name)-\(peripheral.identifier)-")
+        log?("\(Date())---\(#function)-peripheral: \(String(describing: peripheral.name))-\(peripheral.identifier)-")
         
         let identifer = peripheral.identifier.uuidString
         
