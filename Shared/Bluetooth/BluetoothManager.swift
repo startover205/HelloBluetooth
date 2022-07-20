@@ -81,6 +81,8 @@ final class BluetoothManager: NSObject, ObservableObject {
     @Published private(set) var isScanning = false
     @Published var readResult: String?
     
+    var log: ((String) -> Void)?
+    
     init(preferredServices: [CBUUID]? = nil) {
         self.preferredServices = preferredServices
         
@@ -106,6 +108,8 @@ final class BluetoothManager: NSObject, ObservableObject {
 
 extension BluetoothManager: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        log?("\(Date())---\(#function)---")
+        
         guard central.state == .poweredOn else {
             print("Bluetooth is not available. Current state: \(central.state)")
             
@@ -116,7 +120,7 @@ extension BluetoothManager: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        print("\(Date())---\(#function)---")
+        log?("\(Date())---\(#function)-peripheral: \(peripheral.name)-\(peripheral.identifier)-")
         
         let identifer = peripheral.identifier.uuidString
         
@@ -130,20 +134,20 @@ extension BluetoothManager: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print("\(Date())---\(#function)---")
+        log?("\(Date())---\(#function)---")
         
         peripheral.delegate = self
         peripheral.discoverServices(nil)
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Swift.Error?) {
-        print("\(Date())---\(#function)--peripheral: \(peripheral.identifier)-error: \(String(describing: error))")
+        log?("\(Date())---\(#function)--peripheral: \(peripheral.identifier)-error: \(String(describing: error))")
     }
 }
 
 extension BluetoothManager: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Swift.Error?) {
-        print("\(Date())---\(#function)--peripheral: \(peripheral.identifier)-error: \(String(describing: error))")
+        log?("\(Date())---\(#function)--peripheral: \(peripheral.identifier)-error: \(String(describing: error))")
 
         for service in peripheral.services ?? [] {
             peripheral.discoverCharacteristics(nil, for: service)
@@ -151,11 +155,11 @@ extension BluetoothManager: CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Swift.Error?) {
-        print("\(Date())---\(#function)--\(service.uuid)-error: \(String(describing: error))")
+        log?("\(Date())---\(#function)--\(service.uuid)-error: \(String(describing: error))")
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Swift.Error?) {
-        print("\(Date())---\(#function)---")
+        log?("\(Date())---\(#function)---")
         
         guard readResult == nil else { return }
         
@@ -169,6 +173,6 @@ extension BluetoothManager: CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
-        print("\(Date())---\(#function)-invalidatedServices: \(invalidatedServices)--")
+        log?("\(Date())---\(#function)-invalidatedServices: \(invalidatedServices)--")
     }
 }

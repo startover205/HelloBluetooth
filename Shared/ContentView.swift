@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var bluetoothManager = BluetoothManager()
+    @ObservedObject private(set) var bluetoothManager: BluetoothManager
     @State private var alert: String?
     @State private var firstAppear = true
     
@@ -53,11 +53,5 @@ struct ContentView: View {
         } catch {
             alert = error.localizedDescription
         }
-    }
-}
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
     }
 }
