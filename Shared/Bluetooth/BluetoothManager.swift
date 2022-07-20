@@ -7,15 +7,56 @@
 
 import CoreBluetooth
 
+struct Peripheral: Identifiable {
+    let id: String
+    let rssi: Int
+    let cbPeripheral: CBPeripheral
+}
 
 final class BluetoothManager: NSObject, ObservableObject {
+    enum Error: Swift.Error, LocalizedError {
+        case bluetoothNotReady(state: CBManagerState)
+        
+        var errorDescription: String? {
+            switch self {
+            case let .bluetoothNotReady(state: state):
+                switch state {
+                case .resetting:
+                    return "Bluetooth is resetting."
+                case .unsupported:
+                    return "Bluetooth not supported for this device."
+                case .unauthorized:
+                    return "Bluetooth not authorized."
+                case .poweredOff:
+                    return "Please turn on bluetooth."
+                case .poweredOn:
+                    return nil
+                case .unknown:
+                    return "Unknown state"
+                @unknown default:
+                    return "Unknown state"
+                }
+            }
+        }
+    }
+    
     private let queue = DispatchQueue(label: "BluetoothManager")
     
     private lazy var manager = CBCentralManager(delegate: self, queue: queue)
     
     private let preferredServices: [CBUUID]?
     
-    @Published private(set) var discoveredPeripherals = [String: (CBPeripheral, Int)]()
+    private var discoveredPeripherals = [String: (peripheral: CBPeripheral, rssi: Int)]() {
+        didSet {
+            DispatchQueue.main.async {
+                self.peripherals = self.discoveredPeripherals.map {
+                    Peripheral(id: $0.key, rssi: $0.value.rssi, cbPeripheral: $0.value.peripheral)
+                }
+                .sorted { $0.rssi > $1.rssi }
+            }
+        }
+    }
+    @Published private(set) var peripherals = [Peripheral]()
     
     init(preferredServices: [CBUUID]? = nil) {
         self.preferredServices = preferredServices
@@ -23,13 +64,11 @@ final class BluetoothManager: NSObject, ObservableObject {
         super.init()
     }
     
-    func startScanning() {
-        guard manager.state == .poweredOn else { return }
+    func startScanning() throws {
+        guard manager.state == .poweredOn else { throw Error.bluetoothNotReady(state: manager.state) }
         
         manager.scanForPeripherals(withServices: preferredServices)
     }
-
-    
 }
 
 extension BluetoothManager: CBCentralManagerDelegate {
@@ -65,5 +104,6 @@ extension BluetoothManager: CBCentralManagerDelegate {
 //
 //        ... // 可以刷新裝清單tableView *可額外紀錄更新時間避免太頻繁更新
     }
+    
     
 }

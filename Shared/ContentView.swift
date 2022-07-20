@@ -8,9 +8,28 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var bluetoothManager = BluetoothManager()
+    @State private var alert: String?
+    
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        NavigationView {
+            PeripheralList(manager: bluetoothManager)
+                .navigationTitle("Peripherals")
+                .toolbar {
+                    Button {
+                        do {
+                            try bluetoothManager.startScanning()
+                        } catch {
+                            alert = error.localizedDescription
+                        }
+                    } label: {
+                        Label("Refresh", systemImage: "arrow.clockwise")
+                    }
+                }
+        }
+        .alert(alert ?? "Error", isPresented: Binding(get: { alert != nil }, set: { if !$0 { alert = nil} })) {
+            Button("OK") {}
+        }
     }
 }
 

@@ -14,6 +14,7 @@
 		C0BC56B32887A85F0070529E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0BC56A12887A85F0070529E /* Assets.xcassets */; };
 		C0BC56B42887A85F0070529E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0BC56A12887A85F0070529E /* Assets.xcassets */; };
 		C0BC56BF2887A8EB0070529E /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BC56BE2887A8EB0070529E /* BluetoothManager.swift */; };
+		C0BC56C12887AD420070529E /* PeripheralList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BC56C02887AD420070529E /* PeripheralList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		C0BC56AC2887A85F0070529E /* HelloBluetooth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloBluetooth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0BC56AE2887A85F0070529E /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
 		C0BC56BE2887A8EB0070529E /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
+		C0BC56C02887AD420070529E /* PeripheralList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 			children = (
 				C0BC569F2887A8480070529E /* HelloBluetoothApp.swift */,
 				C0BC56A02887A8480070529E /* ContentView.swift */,
+				C0BC56C02887AD420070529E /* PeripheralList.swift */,
 				C0BC56BD2887A8D00070529E /* Bluetooth */,
 				C0BC56A12887A85F0070529E /* Assets.xcassets */,
 			);
@@ -190,6 +193,7 @@
 				C0BC56B12887A85F0070529E /* ContentView.swift in Sources */,
 				C0BC56BF2887A8EB0070529E /* BluetoothManager.swift in Sources */,
 				C0BC56AF2887A85F0070529E /* HelloBluetoothApp.swift in Sources */,
+				C0BC56C12887AD420070529E /* PeripheralList.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +328,7 @@
 				DEVELOPMENT_TEAM = WN2BCRJWNR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth is needed to scan peripherals.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -354,6 +359,7 @@
 				DEVELOPMENT_TEAM = WN2BCRJWNR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Bluetooth is needed to scan peripherals.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
