@@ -6,11 +6,35 @@
 //
 
 import CoreBluetooth
+import Combine
 
-struct Peripheral: Identifiable {
-    let id: String
-    let rssi: Int
+final class Peripheral: Identifiable, ObservableObject {
+    @Published private(set) var services = [CBService]()
+    @Published private(set) var stateDescription = "Unknown"
+    @Published var rssi: Int
+    
+    var id: UUID { cbPeripheral.identifier }
+    var name: String? { cbPeripheral.name }
+    
     let cbPeripheral: CBPeripheral
+    private var cancellable = [Cancellable]()
+    
+    init(rssi: Int, cbPeripheral: CBPeripheral) {
+        self.rssi = rssi
+        self.cbPeripheral = cbPeripheral
+        
+        cancellable.append(cbPeripheral.publisher(for: \.state)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { _ in
+                self.stateDescription = cbPeripheral.stateDescription
+            }))
+        
+        cancellable.append(cbPeripheral.publisher(for: \.services)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { _ in
+                self.services = cbPeripheral.services ?? []
+            }))
+    }
 }
 
 final class BluetoothManager: NSObject, ObservableObject {
@@ -46,13 +70,11 @@ final class BluetoothManager: NSObject, ObservableObject {
     
     private let preferredServices: [CBUUID]?
     
-    private var discoveredPeripherals = [String: (peripheral: CBPeripheral, rssi: Int)]() {
+    private var discoveredPeripherals = [String: Peripheral]() {
         didSet {
             DispatchQueue.main.async {
-                self.peripherals = self.discoveredPeripherals.map {
-                    Peripheral(id: $0.key, rssi: $0.value.rssi, cbPeripheral: $0.value.peripheral)
-                }
-                .sorted { $0.rssi > $1.rssi }
+                self.peripherals = self.discoveredPeripherals.values.map { $0 }
+                    .sorted { $0.rssi > $1.rssi }
             }
         }
     }
@@ -85,24 +107,13 @@ extension BluetoothManager: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         let identifer = peripheral.identifier.uuidString
         
-        discoveredPeripherals[identifer] = (peripheral, RSSI.intValue)
-        
-//        let existItem = discoveredPeripherals[identifer]
-//
-//        if existItem == nil {
-//
-//            // 可以通知使用者找到新裝置
-//            print("Discovered: \([peripheral.name](http://peripheral.name/) ?? "NoName"), RSSI: \(RSSI), identifier: \(peripheral.identifier.uuidString), advertisementData: \(advertisementData)")
-//
-//        }
-//
-//        let now = Date()
-//
-//        let newItem = DiscoveredItem(peripheral: peripheral, rssi: RSSI.intValue, lastSeenDate: now) // RSSI是 NSNumber，可用 .intValue轉換成 Int
-//
-//        foundItems[identifer] = newItem
-//
-//        ... // 可以刷新裝清單tableView *可額外紀錄更新時間避免太頻繁更新
+        if let peripheral = discoveredPeripherals[identifer] {
+            DispatchQueue.main.async {
+                peripheral.rssi = RSSI.intValue
+            }
+        } else {
+            discoveredPeripherals[identifer] = Peripheral(rssi: RSSI.intValue, cbPeripheral: peripheral)
+        }
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {

@@ -9,10 +9,8 @@ import SwiftUI
 import CoreBluetooth
 
 struct ServiceList: View {
-    let peripheral: CBPeripheral
-    private var services: [CBService] {
-        peripheral.services ?? []
-    }
+    let peripheral: Peripheral
+    private var services: [CBService] { peripheral.services }
     
     var body: some View {
         Form {

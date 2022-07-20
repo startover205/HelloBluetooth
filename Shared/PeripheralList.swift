@@ -33,10 +33,8 @@ struct PeripheralList: View {
             Text("No peripheral found")
         } else {
             List(manager.peripherals) { peripheral in
-                let cbPeripheral = peripheral.cbPeripheral
-                
                 NavigationLink {
-                    PeripheralDetail(peripheral: peripheral.cbPeripheral, rssi: peripheral.rssi)
+                    PeripheralDetail(peripheral: peripheral)
                         .onAppear {
                             manager.manager.stopScan()
                             manager.manager.connect(peripheral.cbPeripheral)
@@ -44,10 +42,10 @@ struct PeripheralList: View {
                 } label: {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading) {
-                            Text("State: \(cbPeripheral.stateDescription)")
-                            Text(cbPeripheral.name ?? "Unknown")
+                            Text("State: \(peripheral.stateDescription)")
+                            Text(peripheral.name ?? "Unknown")
                                 .font(.headline)
-                            Text("Servcies: \(cbPeripheral.services?.count ?? 0)")
+                            Text("Servcies: \(peripheral.services.count)")
                         }
                         
                         Spacer()

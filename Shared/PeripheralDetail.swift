@@ -9,8 +9,7 @@ import SwiftUI
 import CoreBluetooth
 
 struct PeripheralDetail: View {
-    let peripheral: CBPeripheral
-    let rssi: Int
+    @ObservedObject var peripheral: Peripheral
     
     var body: some View {
         Form {
@@ -20,7 +19,7 @@ struct PeripheralDetail: View {
                     
                     Spacer()
                     
-                    Text(peripheral.identifier.uuidString)
+                    Text(peripheral.id.uuidString)
                 }
                 
                 HStack {
@@ -28,7 +27,7 @@ struct PeripheralDetail: View {
                     
                     Spacer()
                     
-                    Text(rssi.description)
+                    Text(peripheral.rssi.description)
                 }
                 
                 HStack {
@@ -49,17 +48,12 @@ struct PeripheralDetail: View {
                         
                         Spacer()
                         
-                        Text(peripheral.services?.count.description ?? "0")
+                        Text(peripheral.services.count.description)
                     }
                 }
             }
         }
         .navigationTitle("Peripheral")
-//        .onAppear {
-//            manager.manager.connect(peripheral.cbPeripheral)
-//        }
-        
-//        Text("Connecting...")
     }
 }
 
