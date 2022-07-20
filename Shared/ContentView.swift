@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var bluetoothManager = BluetoothManager()
     @State private var alert: String?
+    @State private var firstAppear = true
     
     var body: some View {
         NavigationView {
@@ -20,11 +21,7 @@ struct ContentView: View {
                         if bluetoothManager.isScanning {
                             bluetoothManager.stopScan()
                         } else {
-                            do {
-                                try bluetoothManager.startScanning()
-                            } catch {
-                                alert = error.localizedDescription
-                            }
+                           refresh()
                         }
                        
                     } label: {
@@ -34,6 +31,21 @@ struct ContentView: View {
         }
         .alert(alert ?? "Error", isPresented: Binding(get: { alert != nil }, set: { if !$0 { alert = nil} })) {
             Button("OK") {}
+        }
+        .onAppear {
+            if firstAppear {
+                firstAppear = false
+                
+                refresh()
+            }
+        }
+    }
+    
+    private func refresh() {
+        do {
+            try bluetoothManager.startScanning()
+        } catch {
+            alert = error.localizedDescription
         }
     }
 }
