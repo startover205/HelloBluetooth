@@ -66,7 +66,7 @@ final class BluetoothManager: NSObject, ObservableObject {
     
     private let queue = DispatchQueue(label: "BluetoothManager")
     
-    private(set) lazy var manager = CBCentralManager(delegate: self, queue: queue)
+    private(set) var manager: CBCentralManager!
     
     private let preferredServices: [CBUUID]?
     
@@ -84,6 +84,8 @@ final class BluetoothManager: NSObject, ObservableObject {
         self.preferredServices = preferredServices
         
         super.init()
+        
+        self.manager = CBCentralManager(delegate: self, queue: queue)
     }
     
     func startScanning() throws {
