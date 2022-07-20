@@ -124,5 +124,12 @@ extension BluetoothManager: CBCentralManagerDelegate {
 
 extension BluetoothManager: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Swift.Error?) {
+        for service in peripheral.services ?? [] {
+            peripheral.discoverCharacteristics(nil, for: service)
+        }
+        
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Swift.Error?) {
     }
 }

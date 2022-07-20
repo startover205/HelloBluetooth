@@ -18,12 +18,17 @@ struct ServiceList: View {
                 Text("No services found.")
             } else {
                 ForEach(services, id: \.uuid) { service in
-                    VStack {
-                        Text(service.uuid.uuidString)
+                    NavigationLink {
+                        CharacteristicList(service: service)
+                    } label: {
+                        VStack {
+                            Text(service.uuid.uuidString)
+                        }
                     }
                 }
             }
         }
+        .navigationTitle("Services")
     }
 }
 
