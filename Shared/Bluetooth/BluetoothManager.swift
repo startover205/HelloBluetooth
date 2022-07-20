@@ -42,7 +42,7 @@ final class BluetoothManager: NSObject, ObservableObject {
     
     private let queue = DispatchQueue(label: "BluetoothManager")
     
-    private lazy var manager = CBCentralManager(delegate: self, queue: queue)
+    private(set) lazy var manager = CBCentralManager(delegate: self, queue: queue)
     
     private let preferredServices: [CBUUID]?
     
@@ -105,5 +105,13 @@ extension BluetoothManager: CBCentralManagerDelegate {
 //        ... // 可以刷新裝清單tableView *可額外紀錄更新時間避免太頻繁更新
     }
     
-    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        peripheral.delegate = self
+        peripheral.discoverServices(nil)
+    }
+}
+
+extension BluetoothManager: CBPeripheralDelegate {
+    private func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+    }
 }
