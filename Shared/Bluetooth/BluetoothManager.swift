@@ -79,7 +79,7 @@ final class BluetoothManager: NSObject, ObservableObject {
         }
     }
     @Published private(set) var peripherals = [Peripheral]()
-    
+    @Published private(set) var isScanning = false
     init(preferredServices: [CBUUID]? = nil) {
         self.preferredServices = preferredServices
         
@@ -90,6 +90,14 @@ final class BluetoothManager: NSObject, ObservableObject {
         guard manager.state == .poweredOn else { throw Error.bluetoothNotReady(state: manager.state) }
         
         manager.scanForPeripherals(withServices: preferredServices)
+        
+        isScanning = manager.isScanning
+    }
+    
+    func stopScan() {
+        manager.stopScan()
+        
+        isScanning = manager.isScanning
     }
 }
 

@@ -17,13 +17,18 @@ struct ContentView: View {
                 .navigationTitle("Peripherals")
                 .toolbar {
                     Button {
-                        do {
-                            try bluetoothManager.startScanning()
-                        } catch {
-                            alert = error.localizedDescription
+                        if bluetoothManager.isScanning {
+                            bluetoothManager.stopScan()
+                        } else {
+                            do {
+                                try bluetoothManager.startScanning()
+                            } catch {
+                                alert = error.localizedDescription
+                            }
                         }
+                       
                     } label: {
-                        Label("Refresh", systemImage: "arrow.clockwise")
+                        Label(bluetoothManager.isScanning ? "Stop" : "Refresh", systemImage: bluetoothManager.isScanning ? "xmark" : "arrow.clockwise")
                     }
                 }
         }
