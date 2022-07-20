@@ -21,8 +21,11 @@ struct ServiceList: View {
                     NavigationLink {
                         CharacteristicList(service: service)
                     } label: {
-                        VStack {
+                        VStack(alignment: .leading) {
                             Text(service.uuid.uuidString)
+                                .foregroundColor(.gray)
+                            Text(service.uuid.description)
+                                .font(.headline)
                         }
                     }
                 }
