@@ -36,8 +36,9 @@ struct PeripheralList: View {
                 let cbPeripheral = peripheral.cbPeripheral
                 
                 NavigationLink {
-                    PeripheralDetail(peripheral: peripheral)
+                    PeripheralDetail(peripheral: peripheral.cbPeripheral, rssi: peripheral.rssi)
                         .onAppear {
+                            manager.manager.stopScan()
                             manager.manager.connect(peripheral.cbPeripheral)
                         }
                 } label: {

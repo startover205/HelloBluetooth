@@ -16,6 +16,7 @@
 		C0BC56BF2887A8EB0070529E /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BC56BE2887A8EB0070529E /* BluetoothManager.swift */; };
 		C0BC56C12887AD420070529E /* PeripheralList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BC56C02887AD420070529E /* PeripheralList.swift */; };
 		C0BC56C32887D5220070529E /* PeripheralDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BC56C22887D5220070529E /* PeripheralDetail.swift */; };
+		C0BC56C52887DA370070529E /* ServiceList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BC56C42887DA370070529E /* ServiceList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		C0BC56BE2887A8EB0070529E /* BluetoothManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
 		C0BC56C02887AD420070529E /* PeripheralList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralList.swift; sourceTree = "<group>"; };
 		C0BC56C22887D5220070529E /* PeripheralDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralDetail.swift; sourceTree = "<group>"; };
+		C0BC56C42887DA370070529E /* ServiceList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,7 @@
 				C0BC56A02887A8480070529E /* ContentView.swift */,
 				C0BC56C02887AD420070529E /* PeripheralList.swift */,
 				C0BC56C22887D5220070529E /* PeripheralDetail.swift */,
+				C0BC56C42887DA370070529E /* ServiceList.swift */,
 				C0BC56BD2887A8D00070529E /* Bluetooth */,
 				C0BC56A12887A85F0070529E /* Assets.xcassets */,
 			);
@@ -196,6 +199,7 @@
 				C0BC56B12887A85F0070529E /* ContentView.swift in Sources */,
 				C0BC56C32887D5220070529E /* PeripheralDetail.swift in Sources */,
 				C0BC56BF2887A8EB0070529E /* BluetoothManager.swift in Sources */,
+				C0BC56C52887DA370070529E /* ServiceList.swift in Sources */,
 				C0BC56AF2887A85F0070529E /* HelloBluetoothApp.swift in Sources */,
 				C0BC56C12887AD420070529E /* PeripheralList.swift in Sources */,
 			);
