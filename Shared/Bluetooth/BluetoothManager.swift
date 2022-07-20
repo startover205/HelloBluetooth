@@ -159,7 +159,7 @@ extension BluetoothManager: CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Swift.Error?) {
-        log?("\(Date())---\(#function)---")
+        log?("\(Date())---\(#function)-value: \(String(describing: characteristic.value))-hexString: \(String(describing: characteristic.value?.hexString))-hexDescription: \(String(describing: characteristic.value?.hexDescription))-error: \(String(describing: error))-")
         
         guard readResult == nil else { return }
         
@@ -169,8 +169,10 @@ extension BluetoothManager: CBPeripheralDelegate {
             } else if let value = characteristic.value {
                 if value.count == 1 {
                     self.readResult = value.first?.description
+                } else if let string = String(data: value, encoding: .utf8) {
+                    self.readResult = string
                 } else {
-                    self.readResult = String(data: value, encoding: .utf8)
+                    self.readResult = "HexString: \(value.hexString)\nHexDescription: \(value.hexDescription)"
                 }
             }
         }
@@ -178,5 +180,17 @@ extension BluetoothManager: CBPeripheralDelegate {
     
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
         log?("\(Date())---\(#function)-invalidatedServices: \(invalidatedServices)--")
+    }
+}
+
+extension Data {
+    var hexString: String {
+        var string = map { String(format: "0x%02hhX ,", $0) }.joined()
+        string.removeLast()
+        return string
+    }
+
+    var hexDescription: String {
+        return reduce("") {$0 + String(format: "%02x", $1)}
     }
 }
