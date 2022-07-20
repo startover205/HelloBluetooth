@@ -167,7 +167,11 @@ extension BluetoothManager: CBPeripheralDelegate {
             if let error = error {
                 self.readResult = error.localizedDescription
             } else if let value = characteristic.value {
-                self.readResult = String(data: value, encoding: .utf8)
+                if value.count == 1 {
+                    self.readResult = value.first?.description
+                } else {
+                    self.readResult = String(data: value, encoding: .utf8)
+                }
             }
         }
     }
