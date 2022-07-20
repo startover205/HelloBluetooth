@@ -16,7 +16,6 @@ struct PeripheralRow: View {
                 Text("State: \(peripheral.stateDescription)")
                 Text(peripheral.name ?? "Unknown")
                     .font(.headline)
-                Text("Servcies: \(peripheral.services.count)")
             }
             
             Spacer()
