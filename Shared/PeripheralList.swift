@@ -40,18 +40,7 @@ struct PeripheralList: View {
                             manager.manager.connect(peripheral.cbPeripheral)
                         }
                 } label: {
-                    HStack(alignment: .top) {
-                        VStack(alignment: .leading) {
-                            Text("State: \(peripheral.stateDescription)")
-                            Text(peripheral.name ?? "Unknown")
-                                .font(.headline)
-                            Text("Servcies: \(peripheral.services.count)")
-                        }
-                        
-                        Spacer()
-                        
-                        Text("RSSI: \(peripheral.rssi)")
-                    }
+                    PeripheralRow(peripheral: peripheral)
                 }
             }
         }
