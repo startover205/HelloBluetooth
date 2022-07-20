@@ -37,7 +37,9 @@ struct PeripheralList: View {
                     PeripheralDetail(peripheral: peripheral)
                         .onAppear {
                             manager.stopScan()
-                            manager.manager.connect(peripheral.cbPeripheral)
+                            if peripheral.cbPeripheral.state != .connected {
+                                manager.manager.connect(peripheral.cbPeripheral)
+                            }
                         }
                 } label: {
                     PeripheralRow(peripheral: peripheral)
