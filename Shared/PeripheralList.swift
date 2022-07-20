@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreBluetooth
 
-private extension CBPeripheral {
+extension CBPeripheral {
     var stateDescription: String {
         switch state {
         case .disconnected:
@@ -35,17 +35,24 @@ struct PeripheralList: View {
             List(manager.peripherals) { peripheral in
                 let cbPeripheral = peripheral.cbPeripheral
                 
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading) {
-                        Text("State: \(cbPeripheral.stateDescription)")
-                        Text(cbPeripheral.name ?? "Unknown")
-                            .font(.headline)
-                        Text("Servcies: \(cbPeripheral.services?.count ?? 0)")
+                NavigationLink {
+                    PeripheralDetail(peripheral: peripheral)
+                        .onAppear {
+                            manager.manager.connect(peripheral.cbPeripheral)
+                        }
+                } label: {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading) {
+                            Text("State: \(cbPeripheral.stateDescription)")
+                            Text(cbPeripheral.name ?? "Unknown")
+                                .font(.headline)
+                            Text("Servcies: \(cbPeripheral.services?.count ?? 0)")
+                        }
+                        
+                        Spacer()
+                        
+                        Text("RSSI: \(peripheral.rssi)")
                     }
-                    
-                    Spacer()
-                    
-                    Text("RSSI: \(peripheral.rssi)")
                 }
             }
         }
