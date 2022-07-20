@@ -18,7 +18,9 @@ struct CharacteristicList: View {
                 Text("No characteristics found.")
             } else {
                 ForEach(characteristics, id: \.uuid) { characteristic in
-                    VStack {
+                    NavigationLink {
+                        CharacteristicDetail(characteristic: characteristic)
+                    } label: {
                         Text(characteristic.uuid.uuidString)
                     }
                 }

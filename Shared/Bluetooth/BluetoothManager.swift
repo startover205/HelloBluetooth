@@ -80,6 +80,8 @@ final class BluetoothManager: NSObject, ObservableObject {
     }
     @Published private(set) var peripherals = [Peripheral]()
     @Published private(set) var isScanning = false
+    @Published var readResult: String?
+    
     init(preferredServices: [CBUUID]? = nil) {
         self.preferredServices = preferredServices
         
@@ -155,6 +157,16 @@ extension BluetoothManager: CBPeripheralDelegate {
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Swift.Error?) {
         print("\(Date())---\(#function)---")
+        
+        guard readResult == nil else { return }
+        
+        DispatchQueue.main.async {
+            if let error = error {
+                self.readResult = error.localizedDescription
+            } else if let value = characteristic.value {
+                self.readResult = String(data: value, encoding: .utf8)
+            }
+        }
     }
     
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
