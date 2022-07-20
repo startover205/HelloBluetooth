@@ -21,7 +21,12 @@ struct CharacteristicList: View {
                     NavigationLink {
                         CharacteristicDetail(characteristic: characteristic)
                     } label: {
-                        Text(characteristic.uuid.uuidString)
+                        VStack(alignment: .leading) {
+                            Text(characteristic.uuid.uuidString)
+                                .foregroundColor(.gray)
+                            Text(characteristic.uuid.description)
+                                .font(.headline)
+                        }
                     }
                 }
             }
