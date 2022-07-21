@@ -164,6 +164,10 @@ extension BluetoothManager: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
         log?("\(Date())---\(#function)-invalidatedServices: \(invalidatedServices)--")
     }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Swift.Error?) {
+        log?("\(Date())---\(#function)--\(characteristic.uuid)-error: \(String(describing: error))")
+    }
 }
 
 extension Data {
