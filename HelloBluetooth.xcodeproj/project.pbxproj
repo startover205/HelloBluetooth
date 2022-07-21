@@ -21,6 +21,7 @@
 		C0BC56C92887EE7B0070529E /* CharacteristicList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BC56C82887EE7B0070529E /* CharacteristicList.swift */; };
 		C0BC56CB2887F9140070529E /* CharacteristicDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BC56CA2887F9140070529E /* CharacteristicDetail.swift */; };
 		C0BC56CD2888506D0070529E /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BC56CC2888506D0070529E /* LogView.swift */; };
+		C0BC56CF28894A430070529E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BC56CE28894A420070529E /* Message.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		C0BC56C82887EE7B0070529E /* CharacteristicList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacteristicList.swift; sourceTree = "<group>"; };
 		C0BC56CA2887F9140070529E /* CharacteristicDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacteristicDetail.swift; sourceTree = "<group>"; };
 		C0BC56CC2888506D0070529E /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
+		C0BC56CE28894A420070529E /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 				C0BC56C42887DA370070529E /* ServiceList.swift */,
 				C0BC56C82887EE7B0070529E /* CharacteristicList.swift */,
 				C0BC56CA2887F9140070529E /* CharacteristicDetail.swift */,
+				C0BC56CE28894A420070529E /* Message.swift */,
 				C0BC56BD2887A8D00070529E /* Bluetooth */,
 				C0BC56A12887A85F0070529E /* Assets.xcassets */,
 			);
@@ -214,6 +217,7 @@
 				C0BC56CD2888506D0070529E /* LogView.swift in Sources */,
 				C0BC56B12887A85F0070529E /* ContentView.swift in Sources */,
 				C0BC56C32887D5220070529E /* PeripheralDetail.swift in Sources */,
+				C0BC56CF28894A430070529E /* Message.swift in Sources */,
 				C0BC56BF2887A8EB0070529E /* BluetoothManager.swift in Sources */,
 				C0BC56C52887DA370070529E /* ServiceList.swift in Sources */,
 				C0BC56AF2887A85F0070529E /* HelloBluetoothApp.swift in Sources */,
