@@ -107,7 +107,7 @@ struct CharacteristicDetail: View {
                     HStack {
                         Text(message.value)
                         Spacer()
-                        Text(messenger.dateFormatter.string(from: message.timestamp))
+                        Text(message.timestamp, formatter: messenger.dateFormatter)
                             .foregroundColor(.gray)
                     }
                 }
