@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+let dateFormatter: DateFormatter = {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "MMdd_hhmm"
+    return dateFormatter
+}()
+
 struct LogView: View {
     let log: String
     
@@ -18,6 +24,38 @@ struct LogView: View {
                     .padding()
             }
             .navigationTitle("Log")
+            .toolbar {
+                Button {
+                    
+                    let tempURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("\(dateFormatter.string(from: Date())).txt")
+                    
+                    try! log.write(to: tempURL, atomically: true, encoding: .utf8)
+                    
+                    let controller = UIActivityViewController(activityItems: [tempURL], applicationActivities: nil)
+                    
+                    let keyWindow = UIApplication.shared.connectedScenes
+                        .filter { $0.activationState == .foregroundActive }
+                        .first(where: { $0 is UIWindowScene })
+                        .flatMap({ $0 as? UIWindowScene })?.windows
+                        .first(where: \.isKeyWindow)
+
+                        if var topController = keyWindow?.rootViewController {
+                            while let presentedViewController = topController.presentedViewController {
+                                topController = presentedViewController
+                            }
+                            
+                            controller.popoverPresentationController?.sourceView = topController.view
+                           //Setup share activity position on screen on bottom center
+                            controller.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height, width: 0, height: 0)
+                            controller.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection.down
+                            
+                            topController.present(controller, animated: true)
+                        }
+                } label: {
+                    Label("Share", systemImage: "square.and.arrow.up")
+                }
+                
+            }
         }
     }
 }
