@@ -79,7 +79,6 @@ final class BluetoothManager: NSObject, ObservableObject {
     }
     @Published private(set) var peripherals = [Peripheral]()
     @Published private(set) var isScanning = false
-    @Published var readResult: String?
     
     var log: ((String) -> Void)?
     
@@ -160,22 +159,6 @@ extension BluetoothManager: CBPeripheralDelegate {
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Swift.Error?) {
         log?("\(Date())---\(#function)-value: \(String(describing: characteristic.value))-hexString: \(String(describing: characteristic.value?.hexString))-hexDescription: \(String(describing: characteristic.value?.hexDescription))-error: \(String(describing: error))-")
-        
-        guard readResult == nil else { return }
-        
-        DispatchQueue.main.async {
-            if let error = error {
-                self.readResult = error.localizedDescription
-            } else if let value = characteristic.value {
-                if value.count == 1 {
-                    self.readResult = value.first?.description
-                } else if let string = String(data: value, encoding: .utf8) {
-                    self.readResult = string
-                } else {
-                    self.readResult = "HexString: \(value.hexString)\nHexDescription: \(value.hexDescription)"
-                }
-            }
-        }
     }
     
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {

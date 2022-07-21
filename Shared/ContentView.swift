@@ -32,9 +32,6 @@ struct ContentView: View {
         .alert(alert ?? "Error", isPresented: Binding(get: { alert != nil }, set: { if !$0 { alert = nil} })) {
             Button("OK") {}
         }
-        .alert(bluetoothManager.readResult ?? "No Value", isPresented: Binding(get: { bluetoothManager.readResult != nil }, set: { if !$0 { bluetoothManager.readResult = nil} })) {
-            Button("OK") {}
-        }
         .onAppear {
             if firstAppear {
                 firstAppear = false

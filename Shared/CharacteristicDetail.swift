@@ -7,9 +7,40 @@
 
 import SwiftUI
 import CoreBluetooth
+import Combine
+
+extension Data {
+    var message: String {
+        if count == 1 {
+            return first!.description
+        } else if let string = String(data: self, encoding: .utf8) {
+            return string
+        } else {
+            return "HexString: \(self.hexString)\nHexDescription: \(self.hexDescription)"
+        }
+    }
+}
+
+struct Message: Identifiable {
+    var id: Date { timestamp }
+    
+    let timestamp = Date()
+    let value: String
+}
+
+final class Messenger: ObservableObject {
+    @Published var values = [Message]()
+    var cancellable: Cancellable?
+    let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm:ss"
+        return dateFormatter
+    }()
+}
 
 struct CharacteristicDetail: View {
     let characteristic: CBCharacteristic
+    @StateObject var messenger = Messenger()
     
     var body: some View {
         Form {
@@ -65,7 +96,32 @@ struct CharacteristicDetail: View {
                     Text("Read Value")
                 }
             }
+            
+            Section("Values") {
+                if messenger.values.isEmpty {
+                    Text("No Values")
+                        .foregroundColor(.gray)
+                }
+                
+                ForEach(messenger.values) { message in
+                    HStack {
+                        Text(message.value)
+                        Spacer()
+                        Text(messenger.dateFormatter.string(from: message.timestamp))
+                            .foregroundColor(.gray)
+                    }
+                }
+            }
+         
         }
         .navigationTitle(characteristic.uuid.description)
+        .onAppear {
+            messenger.cancellable = characteristic.publisher(for: \.value)
+                .receive(on: RunLoop.main)
+                .compactMap { $0 }
+                .sink { [weak messenger] value in
+                    messenger?.values.append(Message(value: value.message))
+                }
+        }
     }
 }
