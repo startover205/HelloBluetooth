@@ -32,6 +32,12 @@ struct ContentView: View {
         .alert(alert ?? "Error", isPresented: Binding(get: { alert != nil }, set: { if !$0 { alert = nil} })) {
             Button("OK") {}
         }
+        .onChange(of: bluetoothManager.alertMessage, perform: { newValue in
+            if newValue != nil {
+                alert = newValue
+                bluetoothManager.alertMessage = nil
+            }
+        })
         .onAppear {
             if firstAppear {
                 firstAppear = false

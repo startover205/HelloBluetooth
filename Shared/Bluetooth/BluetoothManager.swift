@@ -79,6 +79,7 @@ final class BluetoothManager: NSObject, ObservableObject {
     }
     @Published private(set) var peripherals = [Peripheral]()
     @Published private(set) var isScanning = false
+    @Published var alertMessage: String?
     
     var log: ((String) -> Void)?
     
@@ -159,6 +160,13 @@ extension BluetoothManager: CBPeripheralDelegate {
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Swift.Error?) {
         log?("\(Date())---\(#function)-value: \(String(describing: characteristic.value))-hexString: \(String(describing: characteristic.value?.hexString))-hexDescription: \(String(describing: characteristic.value?.hexDescription))-error: \(String(describing: error))-")
+        
+        if let error = error {
+            DispatchQueue.main.async { [weak self] in
+                self?.alertMessage = error.localizedDescription
+            }
+        }
+        
     }
     
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
