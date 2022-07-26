@@ -15,10 +15,14 @@ final class CharacteristicDetailViewModel: ObservableObject {
 
 struct CharacteristicDetail: View {
     let characteristic: CBCharacteristic
+    private var peripheral: CBPeripheral? { characteristic.service?.peripheral }
     @StateObject private var messenger = Messenger()
     @StateObject private var viewModel = CharacteristicDetailViewModel()
     @State private var isNotifying: Bool
     @State private var isFirstAppear = true
+    @State private var alertMessage: String?
+    @State private var writeWithResponseValue = ""
+    @State private var writeWithoutResponseValue = ""
     
     init(characteristic: CBCharacteristic) {
         self.characteristic = characteristic
@@ -82,9 +86,61 @@ struct CharacteristicDetail: View {
             
             if characteristic.properties.contains(.read) {
                 Button {
-                    characteristic.service?.peripheral?.readValue(for: characteristic)
+//                    guard peripheral?.state == .connected else {
+//                        alertMessage =
+//                    }
+//
+                    peripheral?.readValue(for: characteristic)
                 } label: {
                     Text("Read Value")
+                }
+            }
+            
+            if characteristic.properties.contains(.write) {
+                VStack(alignment: .leading) {
+                    Text("Write Value with Response")
+                        .bold()
+                    
+                    HStack {
+                        TextField("Enter Value", text: $writeWithResponseValue)
+                        
+                        Button {
+                            guard let data = writeWithResponseValue.data(using: .utf8) else {
+                                alertMessage = "Invalid Input"
+                                return
+                            }
+                            
+                            peripheral?.writeValue(data, for: characteristic, type: .withResponse)
+                        } label: {
+                            Text("Send")
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(writeWithResponseValue.isEmpty)
+                    }
+                }
+            }
+            
+            if characteristic.properties.contains(.writeWithoutResponse) {
+                VStack(alignment: .leading) {
+                    Text("Write Value without Response")
+                        .bold()
+                    
+                    HStack {
+                        TextField("Enter Value", text: $writeWithoutResponseValue)
+                        
+                        Button {
+                            guard let data = writeWithoutResponseValue.data(using: .utf8) else {
+                                alertMessage = "Invalid Input"
+                                return
+                            }
+                            
+                            peripheral?.writeValue(data, for: characteristic, type: .withResponse)
+                        } label: {
+                            Text("Send")
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(writeWithoutResponseValue.isEmpty)
+                    }
                 }
             }
             
@@ -123,6 +179,9 @@ struct CharacteristicDetail: View {
         }
         .onChange(of: isNotifying) { newValue in
             characteristic.service?.peripheral?.setNotifyValue(newValue, for: characteristic)
+        }
+        .alert(alertMessage ?? "", isPresented: Binding(get: { alertMessage != nil }, set: { if !$0 { alertMessage = nil } })) {
+            Text("OK")
         }
     }
 }

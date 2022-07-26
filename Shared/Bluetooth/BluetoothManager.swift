@@ -169,6 +169,16 @@ extension BluetoothManager: CBPeripheralDelegate {
         
     }
     
+    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Swift.Error?) {
+        log?("\(Date())---\(#function)-peripheral: \(peripheral))--error: \(String(describing: error))-")
+        
+        if let error = error {
+            DispatchQueue.main.async { [weak self] in
+                self?.alertMessage = error.localizedDescription
+            }
+        }
+    }
+    
     func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService]) {
         log?("\(Date())---\(#function)-invalidatedServices: \(invalidatedServices)--")
     }
