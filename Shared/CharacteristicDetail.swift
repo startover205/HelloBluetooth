@@ -9,9 +9,21 @@ import SwiftUI
 import CoreBluetooth
 import Combine
 
+final class CharacteristicDetailViewModel: ObservableObject {
+    var cancellables = [Cancellable]()
+}
+
 struct CharacteristicDetail: View {
     let characteristic: CBCharacteristic
-    @StateObject var messenger = Messenger()
+    @StateObject private var messenger = Messenger()
+    @StateObject private var viewModel = CharacteristicDetailViewModel()
+    @State private var isNotifying: Bool
+    @State private var isFirstAppear = true
+    
+    init(characteristic: CBCharacteristic) {
+        self.characteristic = characteristic
+        self.isNotifying = characteristic.isNotifying
+    }
     
     var body: some View {
         Form {
@@ -29,7 +41,7 @@ struct CharacteristicDetail: View {
                     
                     Spacer()
                     
-                    Text(characteristic.isNotifying ? "YES" : "NO")
+                    Text(isNotifying ? "YES" : "NO")
                 }
                 
             }
@@ -58,6 +70,14 @@ struct CharacteristicDetail: View {
                     
                     Text(characteristic.properties.contains(.writeWithoutResponse) ? "YES" : "NO")
                 }
+                
+                HStack {
+                    Text("Notify")
+                    
+                    Spacer()
+                    
+                    Text(characteristic.properties.contains(.notify) ? "YES" : "NO")
+                }
             }
             
             if characteristic.properties.contains(.read) {
@@ -66,6 +86,10 @@ struct CharacteristicDetail: View {
                 } label: {
                     Text("Read Value")
                 }
+            }
+            
+            if characteristic.properties.contains(.notify) {
+                Toggle("Start Notifications", isOn: $isNotifying)
             }
             
             Section("Values") {
@@ -83,16 +107,22 @@ struct CharacteristicDetail: View {
                     }
                 }
             }
-         
         }
         .navigationTitle(characteristic.uuid.description)
         .onAppear {
-            messenger.cancellable = characteristic.publisher(for: \.value)
-                .receive(on: RunLoop.main)
-                .compactMap { $0 }
-                .sink { [weak messenger] value in
-                    messenger?.values.append(Message(value: value.message))
-                }
+            if isFirstAppear {
+                isFirstAppear = false
+                
+                messenger.cancellable = characteristic.publisher(for: \.value)
+                    .receive(on: RunLoop.main)
+                    .compactMap { $0 }
+                    .sink { [weak messenger] value in
+                        messenger?.values.append(Message(value: value.message))
+                    }
+            }
+        }
+        .onChange(of: isNotifying) { newValue in
+            characteristic.service?.peripheral?.setNotifyValue(newValue, for: characteristic)
         }
     }
 }
