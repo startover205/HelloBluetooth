@@ -20,7 +20,7 @@ struct HelloBluetoothApp: App {
                         Label("Scan", systemImage: "magnifyingglass")
                     }
                 
-                LogView(log: log)
+                LogView(log: $log)
                     .tabItem {
                         Label("Log", systemImage: "text.bubble")
                     }
