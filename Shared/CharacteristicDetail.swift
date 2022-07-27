@@ -16,6 +16,8 @@ final class CharacteristicDetailViewModel: ObservableObject {
 struct CharacteristicDetail: View {
     let characteristic: CBCharacteristic
     private var peripheral: CBPeripheral? { characteristic.service?.peripheral }
+    private var isConnected: Bool { peripheral?.state == .connected }
+
     @StateObject private var messenger = Messenger()
     @StateObject private var viewModel = CharacteristicDetailViewModel()
     @State private var isNotifying: Bool
@@ -86,10 +88,11 @@ struct CharacteristicDetail: View {
             
             if characteristic.properties.contains(.read) {
                 Button {
-//                    guard peripheral?.state == .connected else {
-//                        alertMessage =
-//                    }
-//
+                    guard isConnected else {
+                        showDisconnectPrompt()
+                        return
+                    }
+                    
                     peripheral?.readValue(for: characteristic)
                 } label: {
                     Text("Read Value")
@@ -105,6 +108,11 @@ struct CharacteristicDetail: View {
                         TextField("Enter Value", text: $writeWithResponseValue)
                         
                         Button {
+                            guard isConnected else {
+                                showDisconnectPrompt()
+                                return
+                            }
+                            
                             guard let data = writeWithResponseValue.data(using: .utf8) else {
                                 alertMessage = "Invalid Input"
                                 return
@@ -129,6 +137,11 @@ struct CharacteristicDetail: View {
                         TextField("Enter Value", text: $writeWithoutResponseValue)
                         
                         Button {
+                            guard isConnected else {
+                                showDisconnectPrompt()
+                                return
+                            }
+                            
                             guard let data = writeWithoutResponseValue.data(using: .utf8) else {
                                 alertMessage = "Invalid Input"
                                 return
@@ -178,10 +191,19 @@ struct CharacteristicDetail: View {
             }
         }
         .onChange(of: isNotifying) { newValue in
+            guard isConnected else {
+                showDisconnectPrompt()
+                return
+            }
+            
             characteristic.service?.peripheral?.setNotifyValue(newValue, for: characteristic)
         }
         .alert(alertMessage ?? "", isPresented: Binding(get: { alertMessage != nil }, set: { if !$0 { alertMessage = nil } })) {
             Text("OK")
         }
+    }
+    
+    private func showDisconnectPrompt() {
+        alertMessage = "Device is disconnected"
     }
 }
